@@ -1,0 +1,29 @@
+# Godot 4+ specific ignores
+.godot/
+
+# Godot-specific ignores
+*.translation
+export_presets.cfg
+export_credentials.cfg
+
+# Imported translations (for translation workflow)
+*.po
+
+# Build outputs
+/android/
+/web/
+/linux/
+/windows/
+/macos/
+
+# OS/Editor generated files
+.DS_Store
+Thumbs.db
+*.tmp
+
+# IDE
+.vscode/
+.idea/
+
+# Claude
+.claude/
