@@ -11,8 +11,8 @@ config_version=5
 [application]
 
 config/name="First Game"
-run/main_scene="res://Board.tscn"
-config/features=PackedStringArray("4.5", "GL Compatibility")
+run/main_scene="res://Board3D.tscn"
+config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
 
 [dotnet]
@@ -21,5 +21,4 @@ project/assembly_name="First Game"
 
 [rendering]
 
-renderer/rendering_method="gl_compatibility"
-renderer/rendering_method.mobile="gl_compatibility"
+renderer/rendering_method.mobile="forward_plus"
