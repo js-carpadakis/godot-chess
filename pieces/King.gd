@@ -1,10 +1,15 @@
 extends "res://pieces/Piece.gd"
+## @brief King chess piece.
+## @details Draws a circle with a cross symbol to represent the king.
 class_name King
 
+## @brief Initializes the king piece type and triggers a redraw.
 func _ready() -> void:
     piece_type = "king"
     queue_redraw()
-    
+
+## @brief Draws the king piece.
+## @details Renders a circle with a cross pattern in the center.
 func _draw() -> void:
     var col = Color(1,1,1) if color == "white" else Color(0,0,0)
     var cross_color = Color(0,0,0) if color == "white" else Color(1,1,1)

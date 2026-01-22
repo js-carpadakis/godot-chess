@@ -1,10 +1,15 @@
 extends "res://pieces/Piece.gd"
+## @brief Queen chess piece.
+## @details Draws a circle with crown dots to represent the queen.
 class_name Queen
 
+## @brief Initializes the queen piece type and triggers a redraw.
 func _ready() -> void:
     piece_type = "queen"
     queue_redraw()
 
+## @brief Draws the queen piece.
+## @details Renders a circle with five small dots arranged in a crown pattern.
 func _draw() -> void:
     var col = Color(1,1,1) if color == "white" else Color(0,0,0)
     var crown_color = Color(0,0,0) if color == "white" else Color(1,1,1)

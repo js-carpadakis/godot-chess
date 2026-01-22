@@ -1,10 +1,15 @@
 extends "res://pieces/Piece.gd"
+## @brief Bishop chess piece.
+## @details Draws a diamond shape to represent the bishop.
 class_name Bishop
 
+## @brief Initializes the bishop piece type and triggers a redraw.
 func _ready() -> void:
     piece_type = "bishop"
     queue_redraw()
 
+## @brief Draws the bishop piece.
+## @details Renders a diamond (rotated square) shape with an outline.
 func _draw() -> void:
     var col = Color(1,1,1) if color == "white" else Color(0,0,0)
     # bishop: diamond

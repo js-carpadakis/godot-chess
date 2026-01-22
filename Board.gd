@@ -1,9 +1,8 @@
 extends Node2D
-# Simple chessboard node keeping track of spaces and pieces.
-# Coordinates: Vector2(x, y) where x = 0..7 corresponds to files a..h,
-# and y = 0..7 corresponds to ranks 1..8 (y=0 is rank 1 / bottom of board).
+## @brief Simple chessboard node keeping track of spaces and pieces.
+## @details Coordinates: Vector2(x, y) where x = 0..7 corresponds to files a..h,
+## and y = 0..7 corresponds to ranks 1..8 (y=0 is rank 1 / bottom of board).
 
-# no class_name to avoid global class conflicts
 class_name Chessboard
 
 # Signals: emitted when pieces are set, removed or moved.
@@ -36,6 +35,8 @@ var has_moved: Dictionary = {
 
 signal turn_changed(new_turn)
 
+## @brief Initializes the chessboard when the node enters the scene tree.
+## @details Sets up the grid, connects signals, and optionally sets up standard chess position.
 func _ready() -> void:
 	init_grid()
 	# connect internal update to signals so display refreshes
@@ -49,6 +50,8 @@ func _ready() -> void:
 	set_process_input(true)
 	print("Board: starting turn", current_turn)
 
+## @brief Removes all pieces from the board.
+## @details Frees any Node children used as pieces and clears the spaces array.
 func clear_board() -> void:
 	# remove any node children used as pieces and clear spaces
 	for y in range(rows):
@@ -58,6 +61,8 @@ func clear_board() -> void:
 				p.queue_free()
 			spaces[y][x] = null
 
+## @brief Sets up the standard chess starting position.
+## @details Clears the board, resets special move state, and places all pieces in starting positions.
 func setup_standard() -> void:
 	clear_board()
 	# Reset special move state
@@ -80,6 +85,8 @@ func setup_standard() -> void:
 
 	queue_redraw()
 
+## @brief Initializes the grid array with null values.
+## @details Creates an 8x8 array of null values representing empty squares.
 func init_grid() -> void:
 	spaces.clear()
 	for y in range(rows):
@@ -88,11 +95,17 @@ func init_grid() -> void:
 			row.append(null)
 		spaces.append(row)
 
+## @brief Checks if coordinates are within board bounds.
+## @param c The coordinates to validate as Vector2.
+## @return True if coordinates are valid (0-7 for both x and y), false otherwise.
 func _valid_coords(c: Vector2) -> bool:
 	var x = int(c.x)
 	var y = int(c.y)
 	return x >= 0 and x < cols and y >= 0 and y < rows
 
+## @brief Converts a position (Vector2 or algebraic string) to Vector2 coordinates.
+## @param pos The position as either Vector2 or algebraic notation string (e.g., "e4").
+## @return Vector2 coordinates, or Vector2(-1, -1) if invalid.
 func _pos_to_coords(pos) -> Vector2:
 	if pos is Vector2:
 		return Vector2(int(pos.x), int(pos.y))
@@ -100,12 +113,19 @@ func _pos_to_coords(pos) -> Vector2:
 		return algebraic_to_coords(pos)
 	return Vector2(-1, -1)
 
+## @brief Gets the piece at a given position.
+## @param pos The position as Vector2 or algebraic notation string.
+## @return The piece at the position, or null if empty or invalid.
 func get_piece_at(pos):
 	var c = _pos_to_coords(pos)
 	if not _valid_coords(c):
 		return null
 	return spaces[int(c.y)][int(c.x)]
 
+## @brief Places a piece at a given position.
+## @param pos The position as Vector2 or algebraic notation string.
+## @param piece The piece to place (Node, Dictionary, or String).
+## @details Removes any existing piece, supports dictionary or string shorthand for pieces.
 func set_piece_at(pos, piece) -> void:
 	var c = _pos_to_coords(pos)
 	if not _valid_coords(c):
@@ -137,6 +157,9 @@ func set_piece_at(pos, piece) -> void:
 	emit_signal("piece_set", piece, coords_to_algebraic(c))
 	queue_redraw()
 
+## @brief Removes a piece from a given position.
+## @param pos The position as Vector2 or algebraic notation string.
+## @return The removed piece, or null if position was empty or invalid.
 func remove_piece_at(pos):
 	var c = _pos_to_coords(pos)
 	if not _valid_coords(c):
@@ -147,10 +170,19 @@ func remove_piece_at(pos):
 	queue_redraw()
 	return p
 
+## @brief Moves a piece from one position to another with check enforcement.
+## @param from_pos The starting position as Vector2 or algebraic notation.
+## @param to_pos The destination position as Vector2 or algebraic notation.
+## @return True if the move was successful, false otherwise.
 func move_piece(from_pos, to_pos) -> bool:
 	return move_piece_enforced(from_pos, to_pos, true)
 
-
+## @brief Moves a piece with optional check enforcement.
+## @param from_pos The starting position as Vector2 or algebraic notation.
+## @param to_pos The destination position as Vector2 or algebraic notation.
+## @param enforce_check If true, reverts moves that leave own king in check.
+## @return True if the move was successful, false otherwise.
+## @details Handles en passant, castling, and pawn promotion automatically.
 func move_piece_enforced(from_pos, to_pos, enforce_check := true) -> bool:
 	var f = _pos_to_coords(from_pos)
 	var t = _pos_to_coords(to_pos)
@@ -262,9 +294,12 @@ func move_piece_enforced(from_pos, to_pos, enforce_check := true) -> bool:
 	_print_board_state()
 	return true
 
+## @brief Callback for piece change signals to trigger redraw.
 func _on_piece_changed(_piece = null, _pos = null, _to_pos = null) -> void:
 	queue_redraw()
 
+## @brief Draws the chessboard and selection highlight.
+## @details Renders alternating light/dark squares and highlights the selected square.
 func _draw() -> void:
 	print("Board: _draw called")
 	for y in range(rows):
@@ -279,6 +314,8 @@ func _draw() -> void:
 		var srect = Rect2(_selected * cell_size, Vector2(cell_size, cell_size))
 		draw_rect(srect, selection_color)
 
+## @brief Prints the current board state to the console for debugging.
+## @details Lists all pieces and their positions in algebraic notation.
 func _print_board_state() -> void:
 	var items := []
 	for y in range(rows):
@@ -288,6 +325,10 @@ func _print_board_state() -> void:
 				items.append(coords_to_algebraic(Vector2(x, y)) + ":" + str(p))
 	print("Board state:", items)
 
+## @brief Creates a new piece instance of the specified type and color.
+## @param piece_type The type of piece (e.g., "king", "queen", "pawn").
+## @param color The color of the piece ("white" or "black").
+## @return A new piece Node, or null if the piece script could not be loaded.
 func spawn_piece(piece_type: String, color: String = "white") -> Node:
 	var script_path := "res://pieces/" + piece_type.capitalize() + ".gd"
 	var script = load(script_path)
@@ -300,6 +341,9 @@ func spawn_piece(piece_type: String, color: String = "white") -> Node:
 		return inst
 	return null
 
+## @brief Handles mouse input for piece selection and movement.
+## @param event The input event to process.
+## @details Processes left mouse clicks for selecting pieces and making moves.
 func _input(event) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		print("Board: received click at", event.position)
@@ -358,6 +402,9 @@ func _input(event) -> void:
 						print("Board: ", current_turn, " is stalemated")
 			queue_redraw()
 
+## @brief Converts algebraic notation to board coordinates.
+## @param s The algebraic notation string (e.g., "e4", "a1").
+## @return Vector2 coordinates where x=file (0-7) and y=rank (0-7), or Vector2(-1, -1) if invalid.
 func algebraic_to_coords(s: String) -> Vector2:
 	if s.length() < 2:
 		return Vector2(-1, -1)
@@ -369,6 +416,9 @@ func algebraic_to_coords(s: String) -> Vector2:
 	var y = rank - 1
 	return Vector2(x, y)
 
+## @brief Converts board coordinates to algebraic notation.
+## @param c The board coordinates as Vector2.
+## @return Algebraic notation string (e.g., "e4"), or empty string if invalid.
 func coords_to_algebraic(c: Vector2) -> String:
 	if not _valid_coords(c):
 		return ""
@@ -377,6 +427,9 @@ func coords_to_algebraic(c: Vector2) -> String:
 	var rank = str(int(c.y) + 1)
 	return file + rank
 
+## @brief Gets the color of a piece.
+## @param p The piece to check (Node or Dictionary).
+## @return The color string ("white" or "black"), or error string if invalid.
 func _get_piece_color(p) -> String:
 	if p == null:
 		return "no piece here"
@@ -386,6 +439,10 @@ func _get_piece_color(p) -> String:
 		return p.get("color", null)
 	return "undefined"
 
+## @brief Updates the has_moved tracking for castling rights.
+## @param piece The piece that moved.
+## @param from_vec The starting position of the piece.
+## @details Marks kings and rooks as having moved from their starting positions.
 func _update_has_moved(piece, from_vec: Vector2) -> void:
 	var p_type = piece.piece_type if piece is Node else piece.get("type", "")
 	var p_color = _get_piece_color(piece)
@@ -406,7 +463,10 @@ func _update_has_moved(piece, from_vec: Vector2) -> void:
 			elif fx == 7:
 				has_moved["black_rook_h"] = true
 
-# excludes endpoints; returns true if no pieces block the straight or diagonal path
+## @brief Checks if the path between two squares is clear.
+## @param from_vec The starting position.
+## @param to_vec The ending position.
+## @return True if no pieces block the straight or diagonal path (excludes endpoints).
 func path_clear(from_vec: Vector2, to_vec: Vector2) -> bool:
 	var fx = int(from_vec.x)
 	var fy = int(from_vec.y)
@@ -426,6 +486,12 @@ func path_clear(from_vec: Vector2, to_vec: Vector2) -> bool:
 		y += int(step_y)
 	return true
 
+## @brief Checks if a move is legal according to chess rules.
+## @param piece The piece to move.
+## @param from_vec The starting position.
+## @param to_vec The destination position.
+## @return True if the move is legal for the piece type, false otherwise.
+## @details Validates moves for all piece types including special moves (castling, en passant).
 func is_legal_move(piece, from_vec: Vector2, to_vec: Vector2) -> bool:
 	if piece == null:
 		return false
@@ -508,6 +574,11 @@ func is_legal_move(piece, from_vec: Vector2, to_vec: Vector2) -> bool:
 			# unknown piece type: allow move
 			return true
 
+## @brief Validates an en passant capture.
+## @param from_vec The pawn's starting position.
+## @param to_vec The pawn's destination position.
+## @param p_color The color of the capturing pawn.
+## @return True if the en passant capture is valid, false otherwise.
 func is_en_passant_valid(from_vec: Vector2, to_vec: Vector2, p_color: String) -> bool:
 	if last_move.is_empty() or not last_move.get("was_double_pawn_push", false):
 		return false
@@ -521,6 +592,12 @@ func is_en_passant_valid(from_vec: Vector2, to_vec: Vector2, p_color: String) ->
 	var pawn_type = enemy_pawn.piece_type if enemy_pawn is Node else ""
 	return pawn_type == "pawn"
 
+## @brief Validates a castling move.
+## @param from_vec The king's starting position.
+## @param to_vec The king's destination position.
+## @param p_color The color of the king.
+## @return True if castling is valid, false otherwise.
+## @details Checks that king and rook haven't moved, path is clear, and king doesn't castle through check.
 func is_castling_valid(from_vec: Vector2, to_vec: Vector2, p_color: String) -> bool:
 	var fx = int(from_vec.x)
 	var fy = int(from_vec.y)
@@ -576,6 +653,9 @@ func is_castling_valid(from_vec: Vector2, to_vec: Vector2, p_color: String) -> b
 
 	return true
 
+## @brief Finds the position of a king on the board.
+## @param color The color of the king to find ("white" or "black").
+## @return Vector2 position of the king, or Vector2(-1, -1) if not found.
 func find_king(color: String) -> Vector2:
 	for y in range(rows):
 		for x in range(cols):
@@ -587,6 +667,10 @@ func find_king(color: String) -> Vector2:
 					return Vector2(x, y)
 	return Vector2(-1, -1)
 
+## @brief Checks if a square is attacked by any piece of a given color.
+## @param square The square to check.
+## @param by_color The color of the attacking pieces.
+## @return True if the square is attacked, false otherwise.
 func is_square_attacked(square: Vector2, by_color: String) -> bool:
 	for y in range(rows):
 		for x in range(cols):
@@ -597,6 +681,9 @@ func is_square_attacked(square: Vector2, by_color: String) -> bool:
 					return true
 	return false
 
+## @brief Checks if a king is in check.
+## @param color The color of the king to check.
+## @return True if the king is in check, false otherwise.
 func is_in_check(color: String) -> bool:
 	var king_pos = find_king(color)
 	if not _valid_coords(king_pos):
@@ -604,6 +691,11 @@ func is_in_check(color: String) -> bool:
 	var enemy = "black" if color == "white" else "white"
 	return is_square_attacked(king_pos, enemy)
 
+## @brief Temporarily applies a move on the board for validation.
+## @param from_vec The starting position.
+## @param to_vec The destination position.
+## @return A Dictionary containing the state needed to revert the move.
+## @details Used for checking if a move would leave the king in check.
 func apply_temp_move(from_vec: Vector2, to_vec: Vector2) -> Dictionary:
 	var fx = int(from_vec.x)
 	var fy = int(from_vec.y)
@@ -635,6 +727,8 @@ func apply_temp_move(from_vec: Vector2, to_vec: Vector2) -> Dictionary:
 		"en_passant_captured": en_passant_captured, "en_passant_pos": en_passant_pos
 	}
 
+## @brief Reverts a temporary move applied by apply_temp_move.
+## @param state The state Dictionary returned by apply_temp_move.
 func revert_temp_move(state: Dictionary) -> void:
 	var piece = state.get("piece")
 	var dest = state.get("dest")
@@ -655,6 +749,10 @@ func revert_temp_move(state: Dictionary) -> void:
 	if en_passant_captured != null and _valid_coords(en_passant_pos):
 		spaces[int(en_passant_pos.y)][int(en_passant_pos.x)] = en_passant_captured
 
+## @brief Checks if a player has any legal moves available.
+## @param color The color to check for legal moves.
+## @return True if at least one legal move exists, false otherwise.
+## @details Tests all possible moves and filters out those that would leave the king in check.
 func has_any_legal_moves(color: String) -> bool:
 	for y in range(rows):
 		for x in range(cols):
@@ -672,8 +770,14 @@ func has_any_legal_moves(color: String) -> bool:
 								return true
 	return false
 
+## @brief Checks if a player is in checkmate.
+## @param color The color to check for checkmate.
+## @return True if the player is checkmated (in check with no legal moves).
 func is_checkmate(color: String) -> bool:
 	return is_in_check(color) and not has_any_legal_moves(color)
 
+## @brief Checks if a player is in stalemate.
+## @param color The color to check for stalemate.
+## @return True if the player is stalemated (not in check but no legal moves).
 func is_stalemate(color: String) -> bool:
 	return not is_in_check(color) and not has_any_legal_moves(color)
