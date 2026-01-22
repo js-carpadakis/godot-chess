@@ -1,4 +1,4 @@
-extends "res://pieces/Piece.gd"
+extends "res://2d/pieces/Piece.gd"
 ## @brief Rook chess piece.
 ## @details Draws a square to represent the rook.
 class_name Rook

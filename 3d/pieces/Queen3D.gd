@@ -1,4 +1,4 @@
-extends "res://pieces/Piece3D.gd"
+extends "res://3d/pieces/Piece3D.gd"
 ## @brief 3D Queen chess piece.
 ## @details Tall elegant piece with a crown of small spheres on top.
 

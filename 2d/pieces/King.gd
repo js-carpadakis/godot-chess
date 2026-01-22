@@ -1,4 +1,4 @@
-extends "res://pieces/Piece.gd"
+extends "res://2d/pieces/Piece.gd"
 ## @brief King chess piece.
 ## @details Draws a circle with a cross symbol to represent the king.
 class_name King

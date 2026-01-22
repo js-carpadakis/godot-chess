@@ -330,7 +330,7 @@ func _print_board_state() -> void:
 ## @param color The color of the piece ("white" or "black").
 ## @return A new piece Node, or null if the piece script could not be loaded.
 func spawn_piece(piece_type: String, color: String = "white") -> Node:
-	var script_path := "res://pieces/" + piece_type.capitalize() + ".gd"
+	var script_path := "res://2d/pieces/" + piece_type.capitalize() + ".gd"
 	var script = load(script_path)
 	if script == null:
 		push_error("Unknown piece script: %s" % script_path)

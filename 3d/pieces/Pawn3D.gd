@@ -1,4 +1,4 @@
-extends "res://pieces/Piece3D.gd"
+extends "res://3d/pieces/Piece3D.gd"
 ## @brief 3D Pawn chess piece.
 ## @details Small rounded piece with a base, stem, and spherical top.
 

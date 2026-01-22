@@ -1,4 +1,4 @@
-extends "res://pieces/Piece3D.gd"
+extends "res://3d/pieces/Piece3D.gd"
 ## @brief 3D Bishop chess piece.
 ## @details Tall piece with a tapered body and pointed mitre top.
 

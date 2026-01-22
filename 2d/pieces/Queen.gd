@@ -1,4 +1,4 @@
-extends "res://pieces/Piece.gd"
+extends "res://2d/pieces/Piece.gd"
 ## @brief Queen chess piece.
 ## @details Draws a circle with crown dots to represent the queen.
 class_name Queen

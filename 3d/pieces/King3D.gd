@@ -1,4 +1,4 @@
-extends "res://pieces/Piece3D.gd"
+extends "res://3d/pieces/Piece3D.gd"
 ## @brief 3D King chess piece.
 ## @details Tallest piece with a cross on top.
 

@@ -1,4 +1,4 @@
-extends "res://pieces/Piece.gd"
+extends "res://2d/pieces/Piece.gd"
 ## @brief Knight chess piece.
 ## @details Draws a triangle to represent the knight.
 class_name Knight

@@ -1,4 +1,4 @@
-extends "res://pieces/Piece3D.gd"
+extends "res://3d/pieces/Piece3D.gd"
 ## @brief 3D Rook chess piece.
 ## @details Tower-shaped piece with a base, body, and crenellated top.
 

@@ -1,4 +1,4 @@
-extends "res://pieces/Piece3D.gd"
+extends "res://3d/pieces/Piece3D.gd"
 ## @brief 3D Knight chess piece.
 ## @details Horse-head shaped piece using a tilted cylinder for the neck and sphere for the head.
 

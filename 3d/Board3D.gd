@@ -462,7 +462,7 @@ func _animate_capture(piece: Node3D) -> void:
 # ─────────────────────────────────────────────────────────
 
 func spawn_piece(piece_type: String, color: String = "white") -> Node:
-	var script_path := "res://pieces/" + piece_type.capitalize() + "3D.gd"
+	var script_path := "res://3d/pieces/" + piece_type.capitalize() + "3D.gd"
 	var script = load(script_path)
 	if script == null:
 		push_error("Unknown piece script: %s" % script_path)

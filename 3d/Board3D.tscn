@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3]
 
-[ext_resource type="Script" path="res://Board3D.gd" id="1"]
-[ext_resource type="Script" path="res://CameraController.gd" id="2"]
+[ext_resource type="Script" path="res://3d/Board3D.gd" id="1"]
+[ext_resource type="Script" path="res://3d/CameraController.gd" id="2"]
 
 [sub_resource type="Environment" id="Environment_1"]
 background_mode = 1

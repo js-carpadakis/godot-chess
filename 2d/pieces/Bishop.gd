@@ -1,4 +1,4 @@
-extends "res://pieces/Piece.gd"
+extends "res://2d/pieces/Piece.gd"
 ## @brief Bishop chess piece.
 ## @details Draws a diamond shape to represent the bishop.
 class_name Bishop

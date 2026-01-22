@@ -1,4 +1,4 @@
-extends "res://pieces/Piece.gd"
+extends "res://2d/pieces/Piece.gd"
 ## @brief Pawn chess piece.
 ## @details Draws a simple circle to represent the pawn.
 class_name Pawn
